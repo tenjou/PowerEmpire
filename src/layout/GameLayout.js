@@ -1,6 +1,33 @@
 import { component, componentVoid, elementOpen, elementClose, elementVoid, text, route } from "wabi"
 import MapService from "../service/MapService"
 
+const HeaderResource = component({
+	state: {
+		icon: null,
+		value: 0
+	},
+
+	render() {
+		elementOpen("item")
+			elementVoid("img", { src: this.$icon })
+			elementOpen("amount")
+				text(this.$value)
+			elementClose("amount")
+		elementClose("item")
+	}
+})
+
+const Header = component({
+	render() {
+		elementOpen("header")
+			componentVoid(HeaderResource, { 
+				$icon: "assets/icon/gold.png", 
+				bind: "resources/gold"
+			})
+		elementClose("header")
+	}
+})
+
 const Map = component({
 	mount() {
 		this.props = {
@@ -30,13 +57,14 @@ const Map = component({
 		const inputX = event.clientX - event.currentTarget.offsetLeft
 		const inputY = event.clientY - event.currentTarget.offsetTop
 		const coords = MapService.getCoords(inputX, inputY)
-		console.log(coords)
 	}
 })
 
 const GameLayout = component({
 	render() {	
 		elementOpen("layout")
+			componentVoid(Header)
+
 			elementOpen("game")
 				componentVoid(Map, { bind: "map" })
 			elementClose("game")

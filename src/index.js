@@ -4,7 +4,7 @@ import MapService from "./service/MapService"
 
 const load = () => {
 	store.set("", {
-		currency: {
+		resources: {
 			gold: 100,
 		},
 		map: null

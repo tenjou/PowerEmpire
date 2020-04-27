@@ -46,8 +46,9 @@ row {
 }
 
 layout {
-	display: flex;
+    display: flex;
     flex: 1;
+    flex-direction: column;
 }
 
 game {
@@ -78,4 +79,18 @@ map cell:last-child {
 }
 map cell.grass {
 	background: #8BC34A;
+}
+
+header {
+	background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+header item {
+	display: flex;
+    justify-content: center;
+	align-items: center;	
+    color: #fff;
+	
 }
