@@ -1,0 +1,16 @@
+{
+	"name": "PowerEmpire",
+	"version": "0.1.0",
+	"description": "City building game inspired older Sierra games like Pharaoh, Emperor and Zeus.",
+	"author": "InfiniteGames",
+	"main": "src/index.js",
+	"scripts": {
+		"build": "./node_modules/.bin/replica-next src/index.js -i _index.html index.html -t -u -m ../../libs/wabi",
+		"dev": "./node_modules/.bin/replica-next src/index.js -i _index.html index.html -t -w -s 8080 8081 -m ../../libs/wabi"
+	},
+	"dependencies": {
+		"replica-next": "*"
+	},
+	"keywords": [],
+	"license": "MIT"
+}
