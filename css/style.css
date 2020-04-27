@@ -61,7 +61,8 @@ game {
 
 map {
     display: flex;
-    flex-direction: column;
+	flex-direction: column;
+	cursor: pointer;
 }
 map cell {
 	display: inline-block;
@@ -79,6 +80,9 @@ map cell:last-child {
 }
 map cell.grass {
 	background: #8BC34A;
+}
+map cell.road {
+	background: #c1b752;
 }
 
 header {

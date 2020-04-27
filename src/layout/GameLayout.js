@@ -1,5 +1,11 @@
 import { component, componentVoid, elementOpen, elementClose, elementVoid, text, route } from "wabi"
 import MapService from "../service/MapService"
+import BuildingService from "../service/BuildingService"
+import Enum from "../Enum"
+
+const CellProps = {}
+CellProps[Enum.Cell.Grass] = { class: "grass" }
+CellProps[Enum.Cell.Road] = { class: "road" }
 
 const HeaderResource = component({
 	state: {
@@ -28,36 +34,48 @@ const Header = component({
 	}
 })
 
+const MapCell = component({
+	render() {
+		elementVoid("cell", CellProps[this.$value])
+	}
+})
+
 const Map = component({
 	mount() {
 		this.props = {
-			onmousemove: this.handleMouseMove.bind(this)
+			onmousemove: this.handleMouseMove.bind(this),
+			onmouseup: this.handleMouseUp.bind(this)
 		}
 	},
 
 	render() {
 		const map = this.$value
+		let index = 0
 
 		elementOpen("map", this.props)
 			for(let y = 0; y < map.sizeY; y++) {
 				elementOpen("row")
 					for(let x = 0; x < map.sizeX; x++) {
-						this.renderCell()
+						componentVoid(MapCell, { bind: `map/data/${index}` })
+						index++
 					}
 				elementClose("row")
 			}
 		elementClose("map")
 	},
 
-	renderCell() {
-		elementVoid("cell", { class: "grass" })
-	},
-
 	handleMouseMove(event) {
 		const inputX = event.clientX - event.currentTarget.offsetLeft
 		const inputY = event.clientY - event.currentTarget.offsetTop
 		const coords = MapService.getCoords(inputX, inputY)
-	}
+	},
+
+	handleMouseUp(event) {
+		const inputX = event.clientX - event.currentTarget.offsetLeft
+		const inputY = event.clientY - event.currentTarget.offsetTop
+		const coords = MapService.getCoords(inputX, inputY)
+		BuildingService.build(Enum.Cell.Road, coords[0], coords[1])
+	}	
 })
 
 const GameLayout = component({

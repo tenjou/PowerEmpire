@@ -7,7 +7,7 @@ const load = () => {
 	const sizeX = 16
 	const sizeY = 16
 	const map = {
-		data: new Array().fill(0),
+		data: new Array(sizeX * sizeY).fill(0),
 		sizeX,
 		sizeY
 	}

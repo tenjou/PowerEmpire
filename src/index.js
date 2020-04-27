@@ -16,3 +16,5 @@ const load = () => {
 }
 
 load()
+
+window.store = store
