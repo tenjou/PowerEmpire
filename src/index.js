@@ -1,4 +1,18 @@
-import { component, elementOpen, elementClose, text, route } from "wabi"
+import { component, elementOpen, elementClose, text, store, route } from "wabi"
 import GameLayout from "./layout/GameLayout"
+import MapService from "./service/MapService"
 
-route("/", GameLayout)
+const load = () => {
+	store.set("", {
+		currency: {
+			gold: 100,
+		},
+		map: null
+	})
+
+	MapService.load()
+
+	route("/", GameLayout)
+}
+
+load()
