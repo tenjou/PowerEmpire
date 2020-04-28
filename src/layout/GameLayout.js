@@ -1,6 +1,7 @@
 import { component, componentVoid, elementOpen, elementClose, elementVoid, text, route } from "wabi"
 import MapService from "../service/MapService"
 import BuildingService from "../service/BuildingService"
+import TimeService from "../service/TimeService"
 import Enum from "../Enum"
 
 const CellProps = {}
@@ -18,9 +19,38 @@ const HeaderResource = component({
 	render() {
 		elementOpen("item")
 			elementVoid("img", { src: this.$icon })
-			elementOpen("amount")
+			elementOpen("value")
 				text(this.$value)
-			elementClose("amount")
+			elementClose("value")
+		elementClose("item")
+	}
+})
+
+const HeaderItem = component({
+	state: {
+		icon: null,
+		value: 0
+	},
+
+	render() {
+		elementOpen("item")
+			elementOpen("icon")
+				elementVoid("i", { class: this.$icon })
+			elementClose("icon")
+
+			elementOpen("value")
+				text(this.$value)
+			elementClose("value")
+		elementClose("item")
+	}
+})
+
+const HeaderDate = component({
+	render() {
+		elementOpen("item")
+			elementOpen("value")
+				text(TimeService.getDateString())
+			elementClose("value")
 		elementClose("item")
 	}
 })
@@ -28,9 +58,16 @@ const HeaderResource = component({
 const Header = component({
 	render() {
 		elementOpen("header")
+			componentVoid(HeaderItem, {
+				$icon: "fas fa-user",
+				bind: "population/total"
+			})
 			componentVoid(HeaderResource, { 
 				$icon: "assets/icon/gold.png", 
 				bind: "resources/gold"
+			})
+			componentVoid(HeaderDate, {
+				bind: "date"
 			})
 		elementClose("header")
 	}
