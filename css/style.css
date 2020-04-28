@@ -106,6 +106,7 @@ map entities entity {
 	background: red;
 	border-radius: 16px;
 	box-shadow: 0 0 2px black;
+	border: 1px solid black;
 }
 
 header {
