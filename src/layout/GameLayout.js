@@ -6,6 +6,8 @@ import Enum from "../Enum"
 const CellProps = {}
 CellProps[Enum.Cell.Grass] = { class: "grass" }
 CellProps[Enum.Cell.Road] = { class: "road" }
+CellProps[Enum.Cell.House] = { class: "house" }
+CellProps[Enum.Cell.Well] = { class: "well" }
 
 const HeaderResource = component({
 	state: {
@@ -31,6 +33,38 @@ const Header = component({
 				bind: "resources/gold"
 			})
 		elementClose("header")
+	}
+})
+
+const Brushes = component({
+	mount() {
+		this.bind = "state/brush"
+		this.handleClickFunc = this.handleClick.bind(this)
+	},
+
+	render() {
+		elementOpen("brushes")
+			this.renderBrush("arrow", Enum.Brush.Arrow)
+			this.renderBrush("clear", Enum.Brush.Clear)
+			this.renderBrush("road", Enum.Brush.Road)
+			this.renderBrush("house", Enum.Brush.House)
+			this.renderBrush("well", Enum.Brush.Well)
+		elementClose("brushes")
+	},
+
+	renderBrush(name, brush) {
+		elementOpen("brush", {
+			"data-id": brush,
+			class: (this.$value === brush) ? "active" : null,
+			onclick: this.handleClickFunc
+		})
+			text(name)
+		elementClose("brush")
+	},
+
+	handleClick(event) {
+		const brushId = parseInt(event.currentTarget.dataset.id)
+		BuildingService.selectBrush(brushId)
 	}
 })
 
@@ -74,7 +108,7 @@ const Map = component({
 		const inputX = event.clientX - event.currentTarget.offsetLeft
 		const inputY = event.clientY - event.currentTarget.offsetTop
 		const coords = MapService.getCoords(inputX, inputY)
-		BuildingService.build(Enum.Cell.Road, coords[0], coords[1])
+		BuildingService.useSelectedBrush(coords[0], coords[1])
 	}	
 })
 
@@ -82,6 +116,7 @@ const GameLayout = component({
 	render() {	
 		elementOpen("layout")
 			componentVoid(Header)
+			componentVoid(Brushes)
 
 			elementOpen("game")
 				componentVoid(Map, { bind: "map" })

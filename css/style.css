@@ -1,6 +1,7 @@
 * {
 	padding: 0;
 	margin: 0;
+	user-select: none;
 }
 
 body {
@@ -84,6 +85,12 @@ map cell.grass {
 map cell.road {
 	background: #c1b752;
 }
+map cell.house {
+	background: #c7c7c7;
+}
+map cell.well {
+	background: #2aa1ff;
+}
 
 header {
 	background: #000;
@@ -96,5 +103,27 @@ header item {
     justify-content: center;
 	align-items: center;	
     color: #fff;
-	
+}
+
+brushes {
+	display: flex;
+    justify-content: center;
+	background: #cccbcb;
+	border-bottom: 1px solid #adadad;
+}
+brushes brush {
+	padding: 7px 10px;
+    width: 42px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 11px;
+    cursor: pointer;
+}
+brushes brush:hover {
+	background: #eee;
+    font-weight: 600;
+}
+brushes brush.active {
+	background: #fff;
+    font-weight: 600;
 }
