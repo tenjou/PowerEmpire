@@ -61,6 +61,7 @@ game {
 }
 
 map {
+	position: relative;
     display: flex;
 	flex-direction: column;
 	cursor: pointer;
@@ -90,6 +91,21 @@ map cell.house {
 }
 map cell.well {
 	background: #2aa1ff;
+}
+map entites {
+	position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+map entities entity {
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	background: red;
+	border-radius: 16px;
+	box-shadow: 0 0 2px black;
 }
 
 header {

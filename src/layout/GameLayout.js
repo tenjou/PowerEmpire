@@ -74,6 +74,24 @@ const MapCell = component({
 	}
 })
 
+const MapEntities = component({
+	render() {
+		const entities = this.$value
+
+		elementOpen("entities")
+			for(let n = 0; n < entities.length; n++) {
+				const entity = entities[n]
+				elementVoid("entity", {
+					style: {
+						left: entity.screenX + "px",
+						top: entity.screenY + "px"
+					}
+				})				
+			}
+		elementClose("entities")
+	}
+})
+
 const Map = component({
 	mount() {
 		this.props = {
@@ -95,6 +113,8 @@ const Map = component({
 					}
 				elementClose("row")
 			}
+
+			componentVoid(MapEntities, { bind: "entities" })
 		elementClose("map")
 	},
 
