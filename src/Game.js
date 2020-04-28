@@ -55,6 +55,7 @@ const updateEntity = (entity, tDelta) => {
 		const nextTarget = entity.path.pop()
 		entity.targetX = nextTarget.x
 		entity.targetY = nextTarget.y	
+
 		const screenCoords = MapService.getScreenCoords(entity.targetX, entity.targetY)
 		entity.targetScreenX = screenCoords[0] + entityOffset
 		entity.targetScreenY = screenCoords[1] + entityOffset
@@ -68,6 +69,8 @@ const updateEntity = (entity, tDelta) => {
 		const distance = entity.direction.length()
 		if(distance < speed) {
 			speed = distance
+			entity.x = entity.targetX
+			entity.y = entity.targetY
 			entity.hasTarget = false
 		}
 	
@@ -81,6 +84,8 @@ const teleport = (entity, x, y) => {
 	const screenCoords = MapService.getScreenCoords(x, y)
 	entity.x = x
 	entity.y = y
+	entity.targetX = x
+	entity.targetY = y
 	entity.screenX = screenCoords[0] + entityOffset
 	entity.screenY = screenCoords[1] + entityOffset
 }
