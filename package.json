@@ -1,7 +1,7 @@
 {
 	"name": "PowerEmpire",
 	"version": "0.1.0",
-	"description": "City building game inspired by older Sierra games like Pharaoh, Emperor and Zeus.",
+	"description": "City building game inspired by older Impressions Games like Pharaoh, Emperor and Zeus.",
 	"author": "InfiniteGames",
 	"main": "src/index.js",
 	"scripts": {

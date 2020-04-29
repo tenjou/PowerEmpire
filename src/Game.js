@@ -4,7 +4,7 @@ import MapService from "./service/MapService"
 import Vector2 from "./math/Vector2"
 
 const entities = []
-const entitySpeed = 24
+const entitySpeed = 60
 const entityOffset = 8
 
 function Entity(x, y) {
@@ -55,6 +55,9 @@ const updateEntity = (entity, tDelta) => {
 		const nextTarget = entity.path.pop()
 		entity.targetX = nextTarget.x
 		entity.targetY = nextTarget.y	
+		if(entity.x !== nextTarget.x && entity.y !== nextTarget.y) {
+			console.log("here")
+		} 
 
 		const screenCoords = MapService.getScreenCoords(entity.targetX, entity.targetY)
 		entity.targetScreenX = screenCoords[0] + entityOffset
@@ -71,12 +74,15 @@ const updateEntity = (entity, tDelta) => {
 			speed = distance
 			entity.x = entity.targetX
 			entity.y = entity.targetY
+			entity.screenX = entity.targetScreenX
+			entity.screenY = entity.targetScreenY
 			entity.hasTarget = false
 		}
-	
-		entity.direction.normalize()
-		entity.screenX += entity.direction.x * speed
-		entity.screenY += entity.direction.y * speed
+		else {
+			entity.direction.normalize()
+			entity.screenX += entity.direction.x * speed
+			entity.screenY += entity.direction.y * speed
+		}
 	}
 }
 

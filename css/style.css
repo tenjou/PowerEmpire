@@ -110,16 +110,27 @@ map entities entity {
 }
 
 header {
-	background: #000;
-    display: flex;
+	display: flex;
+	padding: 5px;
     justify-content: center;
-    align-items: center;
+	align-items: center;
+	background: #000;
 }
 header item {
 	display: flex;
+	margin: 0 10px;
     justify-content: center;
 	align-items: center;	
     color: #fff;
+}
+header item icon {
+	display: inline-block;
+	width: 18px;
+	text-align: center;
+}
+header item value {
+	text-transform: capitalize;
+	font-weight: 600;
 }
 
 brushes {
