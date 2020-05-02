@@ -87,6 +87,7 @@ const Brushes = component({
 			this.renderBrush("road")
 			this.renderBrush("house")
 			this.renderBrush("well")
+			this.renderBrush("hunting_hut")
 		elementClose("brushes")
 	},
 

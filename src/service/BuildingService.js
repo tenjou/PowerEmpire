@@ -81,7 +81,11 @@ const selectBrush = (brush) => {
 	store.set("state/brush", brush)
 
 	if(brush === "arrow" || brush === "clear") {
-		store.set("state/placement/id", null)
+		store.set("state/placement", {
+			id: "empty",
+			x: -100,
+			y: -100
+		})
 	}
 	else {
 		store.set("state/placement", {

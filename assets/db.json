@@ -25,10 +25,14 @@
 			},
 			"well": {
 				"id": "well",
-				"sizeX": 2,
-				"sizeY": 2,
+				"sizeX": 1,
+				"sizeY": 1,
 				"type": "building",
-				"levels": []
+				"levels": [
+					{
+						"sprite": "assets/sprites/well_0.png"
+					}
+				]
 			},
 			"road": {
 				"id": "road",
@@ -40,6 +44,24 @@
 						"tileset": "assets/sprites/simple_road_0.png"
 					}
 				]
+			},
+			"hunting_hut": {
+				"id": "hunting_hut",
+				"type": "building",
+				"sizeX": 1,
+				"sizeY": 1,
+				"levels": [
+					{
+						"sprite": "assets/sprites/hunting_hut_0.png"
+					}
+				]
+			},
+			"empty": {
+				"id": "empty",
+				"type": "building",
+				"sizeX": 1,
+				"sizeY": 1,
+				"levels": []
 			}
 		},
 		"localization": {
