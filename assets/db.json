@@ -11,7 +11,17 @@
 				"sizeX": 1,
 				"sizeY": 1,
 				"type": "building",
-				"levels": []
+				"levels": [
+					{
+						"sprite": "assets/sprites/house_0.png"
+					},
+					{
+						"sprite": "assets/sprites/house_1.png"
+					},
+					{
+						"sprite": "assets/sprites/house_2.png"
+					}
+				]
 			},
 			"well": {
 				"id": "well",
