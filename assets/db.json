@@ -10,32 +10,24 @@
 				"id": "house",
 				"sizeX": 1,
 				"sizeY": 1,
-				"levels": [
-					{
-						"sprite": "assets/sprites/house_0.png"
-					},
-					{
-						"sprite": "assets/sprites/house_1.png"
-					}
-				]
+				"type": "building",
+				"levels": []
 			},
 			"well": {
 				"id": "well",
 				"sizeX": 2,
 				"sizeY": 2,
-				"levels": [
-					{
-						"sprite": "assets/sprite/"
-					}
-				]
+				"type": "building",
+				"levels": []
 			},
 			"road": {
 				"id": "road",
+				"type": "road",
 				"sizeX": 1,
 				"sizeY": 1,
 				"levels": [
 					{
-						"sprite": "assets/sprites/simple_road_vertical.png"
+						"tileset": "assets/sprites/simple_road_0.png"
 					}
 				]
 			}

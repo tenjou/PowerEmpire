@@ -9,12 +9,12 @@ const entitySpeed = 60
 
 
 const load = () => {
-	const entitiesSpawn = 10
-	for(let n = 0; n < entitiesSpawn; n++) {
-		const x = MapService.randomGridX()
-		const y = MapService.randomGridY()
-		spawn(x, y)
-	}
+	// const entitiesSpawn = 10
+	// for(let n = 0; n < entitiesSpawn; n++) {
+	// 	const x = MapService.randomGridX()
+	// 	const y = MapService.randomGridY()
+	// 	spawn(x, y)
+	// }
 
 	store.set("entities", entities)
 }
@@ -23,13 +23,12 @@ const update = (tDelta) => {
 	for(let n = 0; n < entities.length; n++) {
 		const entity = entities[n]
 		if(entity instanceof Character) {
-			updateEntity(entity, tDelta)
+			updateEntity(entity, tDelta, n)
 		}
 	}
-	store.update("entities")
 }
 
-const updateEntity = (entity, tDelta) => {
+const updateEntity = (entity, tDelta, id) => {
 	if(!entity.hasTarget) {
 		if(entity.path.length === 0) {
 			if(!AIService.search(
@@ -64,6 +63,8 @@ const updateEntity = (entity, tDelta) => {
 			entity.screenY += entity.direction.y * speed
 		}
 	}
+
+	store.update(`entities/${id}`)
 }
 
 const spawn = (x, y) => {
@@ -74,6 +75,7 @@ const spawn = (x, y) => {
 
 const addEntity = (entity) => {
 	entities.push(entity)
+	store.update("entities")
 }
 
 export default {

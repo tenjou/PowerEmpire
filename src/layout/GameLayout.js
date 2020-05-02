@@ -112,14 +112,12 @@ const MapCell = component({
 	}
 })
 
-const MapEntities = component({
+const MapEntity = component({
 	render() {
-		const entities = this.$value
-
-		elementOpen("entities")
-			for(let n = 0; n < entities.length; n++) {
-				const entity = entities[n]
-				if(entity.config) {
+		const entity = this.$value
+		if(entity.config) {
+			switch(entity.config.type) {
+				case "building":
 					elementOpen("entity", {
 						style: {
 							left: entity.screenX + "px",
@@ -127,19 +125,46 @@ const MapEntities = component({
 						}
 					})
 						elementVoid("img", { src: entity.config.levels[entity.level].sprite })
-					elementClose("entity")
-				}
-				else {
+					elementClose("entity")							
+					break
+
+				case "road":
 					elementOpen("entity", {
 						style: {
 							left: entity.screenX + "px",
 							top: entity.screenY + "px"
 						}
-					})	
-						elementVoid("player")
+					})
+						elementVoid("img", { 
+							src: entity.config.levels[entity.level].tileset,
+							style: {
+								objectPosition: BuildingService.getRoadSprite(entity)
+							}
+						})
 					elementClose("entity")
+					break
+			}
+		}
+		else {
+			elementOpen("entity", {
+				style: {
+					left: entity.screenX + "px",
+					top: entity.screenY + "px"
 				}
-			
+			})	
+				elementVoid("player")
+			elementClose("entity")
+		}
+	}
+})
+
+const MapEntities = component({
+	render() {
+		const entities = this.$value
+
+		elementOpen("entities")
+			for(let n = 0; n < entities.length; n++) {
+				componentVoid(MapEntity, { bind: `${this.bind}/${n}`})
 			}
 		elementClose("entities")
 	}

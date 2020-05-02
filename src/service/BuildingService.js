@@ -33,6 +33,7 @@ const build = (entityId, startX, startY) => {
 	Game.addEntity(building)
 
 	store.update("state/placement")
+	store.update("entities")
 }
 
 const clear = (x, y) => {
@@ -104,9 +105,44 @@ const updatePlacement = (inputX, inputY) => {
 	}
 }
 
+const getRoadSprite = (entity) => {
+	const map = store.data.map
+	let sum = 0
+
+	if(entity.x > 0) {
+		const isRoad = (map.data[(entity.x - 1) + (entity.y * map.sizeX)] === Enum.Cell.Road) 
+		if(isRoad) {
+			sum += 2
+		}
+	}	
+	if(entity.y > 0) {
+		const isRoad = (map.data[entity.x + ((entity.y - 1) * map.sizeX)] === Enum.Cell.Road) 
+		if(isRoad) {
+			sum += 1
+		}
+	}
+	if(entity.x < map.sizeX - 1) {
+		const isRoad = (map.data[(entity.x + 1) + (entity.y * map.sizeX)] === Enum.Cell.Road) 
+		if(isRoad) {
+			sum += 4
+		}
+	}
+	if(entity.y < map.sizeY - 1) {
+		const isRoad = (map.data[entity.x + ((entity.y + 1) * map.sizeX)] === Enum.Cell.Road) 
+		if(isRoad) {
+			sum += 8
+		}
+	}
+
+	const posX = (sum % 4 | 0) * 16
+	const posY = (sum / 4 | 0) * 16
+	return `-${posX}px -${posY}px`
+}
+
 export default {
 	build,
 	useBrush,
 	useSelectedBrush, selectBrush, isSpecialBrush,
-	updatePlacement
+	updatePlacement,
+	getRoadSprite
 }

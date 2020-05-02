@@ -84,7 +84,7 @@ map cell.grass {
 	background: #8BC34A;
 }
 map cell.road {
-	background: #c1b752;
+	background: #90ce49;
 }
 map cell.building {
 	background: #c7c7c7;
@@ -103,7 +103,7 @@ map entities entity {
 	position: absolute;
 }
 map entities entity player {
-	display: block;
+	position: absolute;
 	width: 16px;
 	height: 16px;
 	background: red;
@@ -113,8 +113,12 @@ map entities entity player {
 	z-index: 99;
 }
 map entities entity img {
+	width: 16px;
+	height: 16px;
 	transform: scale(2);
 	image-rendering: pixelated;
+	object-fit: none;
+	object-position: 0 0;	
 }
 map placement {
 	position: absolute;
