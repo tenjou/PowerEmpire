@@ -87,7 +87,8 @@ map cell.road {
 	background: #90ce49;
 }
 map cell.building {
-	background: #c7c7c7;
+	background: #8BC34A;
+	/* background: #c7c7c7; */
 }
 map cell.water {
 	background: #2aa1ff;

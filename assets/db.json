@@ -13,7 +13,7 @@
 				"type": "building",
 				"levels": [
 					{
-						"sprite": "assets/sprites/house_0.png"
+						"sprite": "assets/sprites/house_2.png"
 					},
 					{
 						"sprite": "assets/sprites/house_1.png"

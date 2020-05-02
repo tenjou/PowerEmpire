@@ -1,6 +1,6 @@
 import { store } from "wabi" 
 import MapService from "./MapService"
-import Building from "../Building"
+import { Building } from "../Entity"
 import Enum from "../Enum"
 import Game from "../Game"
 import db from "../../assets/db.json"
@@ -29,24 +29,36 @@ const build = (entityId, startX, startY) => {
 	}
 
 	const building = new Building(config)
-	building.move(startX, startY)
+	Game.entityPosition(building, startX, startY)
 	Game.addEntity(building)
 
 	store.update("state/placement")
 	store.update("entities")
 }
 
-const clear = (x, y) => {
+const clear = (targetX, targetY) => {
 	const map = store.data.map
-	if(x < 0 || y < 0 || x >= map.sizeX || y >= map.sizeY) {
-		console.error(`Invalid build cell: X:${x}, Y:${y}`)
+	if(targetX < 0 || targetY < 0 || targetX >= map.sizeX || targetY >= map.sizeY) {
+		console.error(`Invalid build cell: X:${targetX}, Y:${targetY}`)
 		return
 	}
 	
-	const index = x + (map.sizeX * y) 
-	const cellType = map.data[index]
+	const entity = Game.getEntityAt(targetX, targetY)
+	if(!entity) {
+		console.error(`No entity at: x:${targetX} y:${targetY}`)
+		return
+	}
 
-	store.set(`map/data/${index}`, Enum.Cell.Grass)
+	const endX = targetX + entity.config.sizeX
+	const endY = targetY + entity.config.sizeY
+	for(let y = targetY; y < endY; y++) {
+		for(let x = targetX; x < endX; x++) {
+			const index = x + (map.sizeX * y) 
+			store.set(`map/data/${index}`, Enum.Cell.Ground)
+		}
+	}
+
+	Game.removeEntityAt(targetX, targetY)
 }
 
 const useBrush = (brush, x, y) => {
