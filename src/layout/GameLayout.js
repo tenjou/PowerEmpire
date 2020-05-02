@@ -3,12 +3,13 @@ import MapService from "../service/MapService"
 import BuildingService from "../service/BuildingService"
 import TimeService from "../service/TimeService"
 import Enum from "../Enum"
+import db from "../../assets/db.json"
 
 const CellProps = {}
-CellProps[Enum.Cell.Grass] = { class: "grass" }
+CellProps[Enum.Cell.Ground] = { class: "grass" }
+CellProps[Enum.Cell.Water] = { class: "water" }
+CellProps[Enum.Cell.Building] = { class: "building" }
 CellProps[Enum.Cell.Road] = { class: "road" }
-CellProps[Enum.Cell.House] = { class: "house" }
-CellProps[Enum.Cell.Well] = { class: "well" }
 
 const HeaderResource = component({
 	state: {
@@ -81,26 +82,26 @@ const Brushes = component({
 
 	render() {
 		elementOpen("brushes")
-			this.renderBrush("arrow", Enum.Brush.Arrow)
-			this.renderBrush("clear", Enum.Brush.Clear)
-			this.renderBrush("road", Enum.Brush.Road)
-			this.renderBrush("house", Enum.Brush.House)
-			this.renderBrush("well", Enum.Brush.Well)
+			this.renderBrush("arrow")
+			this.renderBrush("clear")
+			this.renderBrush("road")
+			this.renderBrush("house")
+			this.renderBrush("well")
 		elementClose("brushes")
 	},
 
-	renderBrush(name, brush) {
+	renderBrush(id) {
 		elementOpen("brush", {
-			"data-id": brush,
-			class: (this.$value === brush) ? "active" : null,
+			"data-id": id,
+			class: (this.$value === id) ? "active" : null,
 			onclick: this.handleClickFunc
 		})
-			text(name)
+			text(id)
 		elementClose("brush")
 	},
 
 	handleClick(event) {
-		const brushId = parseInt(event.currentTarget.dataset.id)
+		const brushId = event.currentTarget.dataset.id
 		BuildingService.selectBrush(brushId)
 	}
 })
@@ -118,14 +119,54 @@ const MapEntities = component({
 		elementOpen("entities")
 			for(let n = 0; n < entities.length; n++) {
 				const entity = entities[n]
-				elementVoid("entity", {
-					style: {
-						left: entity.screenX + "px",
-						top: entity.screenY + "px"
-					}
-				})				
+				if(entity.config) {
+					elementOpen("entity", {
+						style: {
+							left: entity.screenX + "px",
+							top: entity.screenY + "px"
+						}
+					})
+						elementVoid("img", { src: "assets/sprites/BuidlingLevel2_0.png" })
+					elementClose("entity")
+				}
+				else {
+					elementVoid("entity", {
+						style: {
+							left: entity.screenX + "px",
+							top: entity.screenY + "px"
+						}
+					})	
+				}
+			
 			}
 		elementClose("entities")
+	}
+})
+
+const BuildingPlacement = component({
+	render() {
+		const state = this.$value
+		if(!state.id) {
+			return
+		}
+		const config = db.assets.entities[state.id]
+		const coords = MapService.getScreenCoords(state.x, state.y)
+		elementOpen("placement", {
+			style: {
+				left: coords[0] + "px",
+				top: coords[1] + "px"
+			}
+		})
+			for(let y = 0; y < config.sizeY; y++) {
+				elementOpen("row")
+					for(let x = 0; x < config.sizeX; x++) {
+						elementVoid("cell", { 
+							class: MapService.isCellFree(state.x + x, state.y + y) ? "" : "invalid"
+						})
+					}
+				elementClose("row")
+			}
+		elementClose("placement")
 	}
 })
 
@@ -152,6 +193,7 @@ const Map = component({
 			}
 
 			componentVoid(MapEntities, { bind: "entities" })
+			componentVoid(BuildingPlacement, { bind: "state/placement" })
 		elementClose("map")
 	},
 
@@ -159,6 +201,7 @@ const Map = component({
 		const inputX = event.clientX - event.currentTarget.offsetLeft
 		const inputY = event.clientY - event.currentTarget.offsetTop
 		const coords = MapService.getCoords(inputX, inputY)
+		BuildingService.updatePlacement(inputX, inputY)
 	},
 
 	handleMouseUp(event) {

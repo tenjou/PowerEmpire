@@ -1,0 +1,47 @@
+{
+	"meta": {
+		"id": "13009c62bf2545248e5b2ae29a21ffe5",
+		"name": "PowerEmpire",
+		"created": 1588143362571
+	},
+	"assets": {
+		"entities": {
+			"house": {
+				"id": "house",
+				"sizeX": 2,
+				"sizeY": 2,
+				"levels": [
+					{
+						"sprite": "assets/sprite/house_0.png"
+					}
+				]
+			},
+			"well": {
+				"id": "well",
+				"sizeX": 2,
+				"sizeY": 2,
+				"levels": [
+					{
+						"sprite": "assets/sprite/"
+					}
+				]
+			},
+			"road": {
+				"id": "road",
+				"sizeX": 1,
+				"sizeY": 1,
+				"levels": [
+					{
+						"sprite": "assets/sprite/"
+					}
+				]
+			}
+		},
+		"localization": {
+			"uid": {
+				"id": "uid",
+				"en": "Key"
+			}
+		}
+	}
+}

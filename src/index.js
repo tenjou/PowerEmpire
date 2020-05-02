@@ -13,7 +13,12 @@ const load = () => {
 		},
 		map: null,
 		state: {
-			brush: Enum.Brush.Arrow
+			brush: "arrow",
+			placement: {
+				id: null,
+				x: 0,
+				y: 0
+			}
 		},
 		population: {
 			total: 0
@@ -43,7 +48,7 @@ const load = () => {
 		Game.update(tDelta)
 				
 		prevTime = currTime
-	}, 1000 / 60)	
+	}, 1000 / 60)
 }
 
 load()

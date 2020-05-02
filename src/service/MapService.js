@@ -1,5 +1,6 @@
 import { store } from "wabi"
 import Utils from "../Utils"
+import Enum from "../Enum"
 
 const cellSizeX = 32
 const cellSizeY = 32
@@ -36,8 +37,28 @@ const randomGridY = () => {
 	return Utils.randomNumber(0, store.data.map.sizeY - 1)
 }
 
+const isCellFree = (gridX, gridY) => {
+	const map = store.data.map
+	const index = gridX + (gridY * map.sizeX)
+	return (map.data[index] === Enum.Cell.Ground)
+}
+
+const isAreaFree = (startX, startY, endX, endY) => {
+	const map = store.data.map
+	for(let y = startY; y < endY; y++) {
+		for(let x = startX; x < endX; x++) {
+			const index = x + (y * map.sizeX)
+			if(map.data[index] !== Enum.Cell.Ground) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 export default {
 	load,
 	getCoords, getScreenCoords,
-	randomGridX, randomGridY
+	randomGridX, randomGridY,
+	isCellFree, isAreaFree
 }

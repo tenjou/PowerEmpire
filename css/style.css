@@ -86,10 +86,10 @@ map cell.grass {
 map cell.road {
 	background: #c1b752;
 }
-map cell.house {
+map cell.building {
 	background: #c7c7c7;
 }
-map cell.well {
+map cell.water {
 	background: #2aa1ff;
 }
 map entites {
@@ -107,6 +107,20 @@ map entities entity {
 	border-radius: 16px;
 	box-shadow: 0 0 2px black;
 	border: 1px solid black;
+}
+map placement {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 1px 1px;
+}
+map placement cell {
+	border: 0;
+	background: white;
+	opacity: 0.3;
+}
+map placement cell.invalid {
+	background: red;
 }
 
 header {
