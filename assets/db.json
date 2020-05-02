@@ -8,11 +8,14 @@
 		"entities": {
 			"house": {
 				"id": "house",
-				"sizeX": 2,
-				"sizeY": 2,
+				"sizeX": 1,
+				"sizeY": 1,
 				"levels": [
 					{
-						"sprite": "assets/sprite/house_0.png"
+						"sprite": "assets/sprites/house_0.png"
+					},
+					{
+						"sprite": "assets/sprites/house_1.png"
 					}
 				]
 			},
@@ -32,7 +35,7 @@
 				"sizeY": 1,
 				"levels": [
 					{
-						"sprite": "assets/sprite/"
+						"sprite": "assets/sprites/simple_road_vertical.png"
 					}
 				]
 			}

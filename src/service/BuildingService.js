@@ -1,6 +1,8 @@
 import { store } from "wabi" 
 import MapService from "./MapService"
+import Building from "../Building"
 import Enum from "../Enum"
+import Game from "../Game"
 import db from "../../assets/db.json"
 
 const build = (entityId, startX, startY) => {
@@ -26,9 +28,9 @@ const build = (entityId, startX, startY) => {
 		}
 	}
 
-	// const building = new Building(config)
-	// building.move(x, y)
-	// Game.addEntity(building)
+	const building = new Building(config)
+	building.move(startX, startY)
+	Game.addEntity(building)
 
 	store.update("state/placement")
 }

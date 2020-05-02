@@ -101,12 +101,20 @@ map entites {
 }
 map entities entity {
 	position: absolute;
+}
+map entities entity player {
+	display: block;
 	width: 16px;
 	height: 16px;
 	background: red;
 	border-radius: 16px;
 	box-shadow: 0 0 2px black;
 	border: 1px solid black;
+	z-index: 99;
+}
+map entities entity img {
+	transform: scale(2);
+	image-rendering: pixelated;
 }
 map placement {
 	position: absolute;

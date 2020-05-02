@@ -126,16 +126,18 @@ const MapEntities = component({
 							top: entity.screenY + "px"
 						}
 					})
-						elementVoid("img", { src: "assets/sprites/BuidlingLevel2_0.png" })
+						elementVoid("img", { src: entity.config.levels[entity.level].sprite })
 					elementClose("entity")
 				}
 				else {
-					elementVoid("entity", {
+					elementOpen("entity", {
 						style: {
 							left: entity.screenX + "px",
 							top: entity.screenY + "px"
 						}
 					})	
+						elementVoid("player")
+					elementClose("entity")
 				}
 			
 			}
