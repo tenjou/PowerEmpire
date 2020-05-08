@@ -3,7 +3,7 @@ import AStar from "../AStar"
 import Enum from "../Enum"
 
 let astar = null
-const options = new AStar.Options(Enum.Cell.Grass | Enum.Cell.Road)
+const options = new AStar.Options(Enum.Cell.Grass | Enum.Cell.Road, false, 1)
 
 const load = () => {
 	const map = store.data.map

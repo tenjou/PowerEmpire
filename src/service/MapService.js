@@ -56,9 +56,55 @@ const isAreaFree = (startX, startY, endX, endY) => {
 	return true
 }
 
+const findClosestRoad = (entity) => {
+	const map = store.data.map
+	const mapData = map.data
+	const startX = entity.x
+	const startY = entity.y
+	const endX = entity.x + entity.config.sizeX
+	const endY = entity.y + entity.config.sizeY
+
+	for(let x = startX; x < endX; x++) {
+		let index = x + ((startY - 1) * map.sizeX)
+		if(index > 0 && index < mapData.length && mapData[index] === Enum.Cell.Road) {
+			tmp[0] = x
+			tmp[1] = startY - 1
+			return tmp
+		}
+
+		index = x + (endY * map.sizeX)
+		if(index > 0 && index < mapData.length && mapData[index] === Enum.Cell.Road) {
+			tmp[0] = x
+			tmp[1] = endY
+			return tmp
+		}
+	}
+
+	for(let y = startY; y < endY; y++) {
+		let index = (startX - 1) + (y * map.sizeX)
+		if(index > 0 && index < mapData.length && mapData[index] === Enum.Cell.Road) {
+			tmp[0] = startX - 1
+			tmp[1] = y
+			return tmp
+		}
+
+		index = endX + (endY * map.sizeX)
+		if(index > 0 && index < mapData.length && mapData[index] === Enum.Cell.Road) {
+			tmp[0] = endX
+			tmp[1] = y
+			return tmp
+		}
+	}
+
+	tmp[0] = -1
+	tmp[1] = -1
+	return tmp
+}
+
 export default {
 	load,
 	getCoords, getScreenCoords,
 	randomGridX, randomGridY,
-	isCellFree, isAreaFree
+	isCellFree, isAreaFree,
+	findClosestRoad
 }

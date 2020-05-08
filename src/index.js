@@ -3,8 +3,10 @@ import GameLayout from "./layout/GameLayout"
 import MapService from "./service/MapService"
 import AIService from "./service/AIService"
 import TimeService from "./service/TimeService"
+import PopulationService from "./service/PopulationService"
 import Enum from "./Enum"
 import Game from "./Game"
+import BuildingService from "./service/BuildingService"
 
 const load = () => {
 	store.set("", {
@@ -21,7 +23,9 @@ const load = () => {
 			}
 		},
 		population: {
-			total: 0
+			total: 0,
+			freeSpace: 0,
+			immigrants: 0
 		},
 		date: {
 			day: 0,
@@ -40,15 +44,27 @@ const load = () => {
 	route("/", GameLayout)
 
 	let prevTime = Date.now()
+	let prevTime2 = Date.now()
+
 	const interval = setInterval(() => {
 		const currTime = Date.now()
 		const tDelta = (currTime - prevTime) / 1000
 
 		TimeService.update()
 		Game.update(tDelta)
+		PopulationService.update(tDelta)
 				
 		prevTime = currTime
 	}, 1000 / 60)
+
+	const interval2 = setInterval(() => {
+		const currTime = Date.now()
+		const tDelta = (currTime - prevTime) / 1000
+
+		BuildingService.update(tDelta)
+				
+		prevTime2 = currTime
+	}, 1000)
 }
 
 load()

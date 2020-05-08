@@ -3,6 +3,7 @@ import MapService from "../service/MapService"
 import BuildingService from "../service/BuildingService"
 import TimeService from "../service/TimeService"
 import Enum from "../Enum"
+import { Immigrant } from "../Entity"
 import db from "../../assets/db.json"
 
 const CellProps = {}
@@ -116,9 +117,16 @@ const MapCell = component({
 const MapEntity = component({
 	render() {
 		const entity = this.$value
+		if(!entity) {
+			console.error("error")
+			return
+		}
+
 		if(entity.config) {
 			switch(entity.config.type) {
 				case "building":
+				case "house":
+				case "service":
 					elementOpen("entity", {
 						style: {
 							left: entity.screenX + "px",
@@ -153,7 +161,12 @@ const MapEntity = component({
 					top: entity.screenY + "px"
 				}
 			})	
-				elementVoid("player")
+				if(entity instanceof Immigrant) {
+					elementVoid("character", { class: "immigrant" })
+				}
+				else {
+					elementVoid("character")
+				}
 			elementClose("entity")
 		}
 	}

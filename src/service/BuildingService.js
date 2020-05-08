@@ -1,9 +1,28 @@
 import { store } from "wabi" 
 import MapService from "./MapService"
-import { Building } from "../Entity"
+import PopulationService from "./PopulationService"
+import { Building, House, ServiceBuilding } from "../Entity"
 import Enum from "../Enum"
 import Game from "../Game"
 import db from "../../assets/db.json"
+
+const serviceBuildings = []
+
+Game.subscribe(Enum.Event.EntityAdd, (entity) => {
+	if(entity.config && entity.config.type === "service") {
+		serviceBuildings.push(entity)
+	}
+})
+
+Game.subscribe(Enum.Event.EntityRemove, (entity) => {
+	if(entity.config && entity.config.type === "service") {
+		const index = serviceBuildings.indexOf(entity)
+		if(index !== -1) {
+			serviceBuildings[index] = serviceBuildings[serviceBuildings.length - 1]
+			serviceBuildings.pop()
+		}
+	}
+})
 
 const build = (entityId, startX, startY) => {
 	const map = store.data.map
@@ -28,12 +47,26 @@ const build = (entityId, startX, startY) => {
 		}
 	}
 
-	const building = new Building(config)
-	Game.entityPosition(building, startX, startY)
-	Game.addEntity(building)
+	let entity = null
+	switch(config.type) {
+		case "house": 
+			entity = new House(config)
+			break
+		case "service":
+			entity = new ServiceBuilding(config)
+			break
+		default:
+			entity = new Building(config)
+			break
+	}
+
+	Game.entityPosition(entity, startX, startY)
+	Game.addEntity(entity)
 
 	store.update("state/placement")
 	store.update("entities")
+
+	PopulationService.updateFreeSpace()
 }
 
 const clear = (targetX, targetY) => {
@@ -155,10 +188,26 @@ const getRoadSprite = (entity) => {
 	return `-${posX}px -${posY}px`
 }
 
+const updateEntry = (entity) => {
+	if(entity.entryX !== -1) {
+		return
+	} 
+	const coords = MapService.findClosestRoad(entity)
+	console.log(coords)
+}
+
+const update = (tDelta) => {
+	for(let n = 0; n < serviceBuildings.length; n++) {
+		const entity = serviceBuildings[n]
+		updateEntry(entity)
+	}
+}
+
 export default {
 	build,
 	useBrush,
 	useSelectedBrush, selectBrush, isSpecialBrush,
 	updatePlacement,
-	getRoadSprite
+	getRoadSprite,
+	update
 }

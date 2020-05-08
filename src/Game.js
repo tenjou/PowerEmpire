@@ -5,6 +5,7 @@ import { Character } from "./Entity"
 import Config from "./Config"
 import db from "../assets/db.json"
 
+const listeners = {}
 const entities = []
 const entitiesRemove = []
 const entitiesGrid = []
@@ -29,13 +30,50 @@ const update = (tDelta) => {
 			entities.pop()
 		}
 		entitiesRemove.length = 0
-		store.update("entities")
 	}
 
 	for(let n = 0; n < entities.length; n++) {
 		const entity = entities[n]
 		if(entity instanceof Character) {
-			updateEntity(entity, tDelta, n)
+			updateEntity(entity, tDelta)
+		}
+	}
+
+	store.update("entities")
+}
+
+const updateEntity = (entity, tDelta) => {
+	if(!entity.hasTarget) {
+		if(entity.path.length === 0) {
+			if(entity.onDone) {
+				entity.onDone(entity)
+			}
+			if(entity.path.length === 0) {
+				return
+			}
+		}
+
+		const nextTarget = entity.path.pop()
+		entityTarget(entity, nextTarget.x, nextTarget.y)
+	}
+
+	if(entity.hasTarget) {
+		let speed = entitySpeed * tDelta
+
+		entity.direction.set(entity.targetScreenX - entity.screenX, entity.targetScreenY - entity.screenY)
+		const distance = entity.direction.length()
+		if(distance < speed) {
+			speed = distance
+			entity.x = entity.targetX
+			entity.y = entity.targetY
+			entity.screenX = entity.targetScreenX
+			entity.screenY = entity.targetScreenY
+			entity.hasTarget = false
+		}
+		else {
+			entity.direction.normalize()
+			entity.screenX += entity.direction.x * speed
+			entity.screenY += entity.direction.y * speed
 		}
 	}
 }
@@ -69,52 +107,15 @@ const entityTarget = (entity, targetX, targetY) => {
 	entity.hasTarget = true
 }
 
-const updateEntity = (entity, tDelta, id) => {
-	if(!entity.hasTarget) {
-		if(entity.path.length === 0) {
-			if(!AIService.search(
-				entity.x, entity.y, 
-				MapService.randomGridX(), MapService.randomGridY(),
-				entity.path)) 
-			{
-				return	
-			}
-		}
-
-		const nextTarget = entity.path.pop()
-		entityTarget(entity, nextTarget.x, nextTarget.y)
-	}
-
-	if(entity.hasTarget) {
-		let speed = entitySpeed * tDelta
-
-		entity.direction.set(entity.targetScreenX - entity.screenX, entity.targetScreenY - entity.screenY)
-		const distance = entity.direction.length()
-		if(distance < speed) {
-			speed = distance
-			entity.x = entity.targetX
-			entity.y = entity.targetY
-			entity.screenX = entity.targetScreenX
-			entity.screenY = entity.targetScreenY
-			entity.hasTarget = false
-		}
-		else {
-			entity.direction.normalize()
-			entity.screenX += entity.direction.x * speed
-			entity.screenY += entity.direction.y * speed
-		}
-	}
-
-	store.update(`entities/${id}`)
-}
-
 const addEntity = (entity) => {
 	entities.push(entity)
 	store.update("entities")
+	emit("entity-add", entity)
 }
 
 const removeEntity = (entity) => {
 	entitiesRemove.push(entity)
+	emit("entity-remove", entity)
 }
 
 const removeEntityAt = (x, y) => {
@@ -131,8 +132,39 @@ const getEntityAt = (x, y) => {
 	return entity || null
 }
 
+const subscribe = (type, func) => {
+	const funcs = listeners[type]
+	if(funcs) {
+		funcs.push(func)
+	}
+	else {
+		listeners[type] = [ func ]
+	}
+}
+
+const unsubscribe = (type, func) => {
+	const funcs = listeners[type]
+	if(!funcs) {
+		return
+	}
+	const index = funcs.indexOf(func)
+	funcs[index] = funcs[funcs.length - 1]
+	funcs.pop()
+}
+
+const emit = (type, arg) => {
+	const funcs = listeners[type]
+	if(!funcs) {
+		return
+	}
+	for(let n = 0; n < funcs.length; n++) {
+		funcs[n](arg)
+	}
+}
+
 export default {
 	load, update, addEntity,
 	entityPosition,
-	removeEntity, removeEntityAt, getEntityAt
+	removeEntity, removeEntityAt, getEntityAt,
+	subscribe, unsubscribe, emit
 }

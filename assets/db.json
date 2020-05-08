@@ -8,31 +8,35 @@
 		"entities": {
 			"house": {
 				"id": "house",
+				"type": "house",
 				"sizeX": 1,
 				"sizeY": 1,
-				"type": "building",
 				"levels": [
 					{
-						"sprite": "assets/sprites/house_2.png"
+						"sprite": "assets/sprites/house_0.png",
+						"space": 7
 					},
 					{
-						"sprite": "assets/sprites/house_1.png"
+						"sprite": "assets/sprites/house_1.png",
+						"space": 7
 					},
 					{
-						"sprite": "assets/sprites/house_2.png"
+						"sprite": "assets/sprites/house_2.png",
+						"space": 14
 					}
 				]
 			},
 			"well": {
 				"id": "well",
+				"type": "service",
 				"sizeX": 1,
 				"sizeY": 1,
-				"type": "building",
 				"levels": [
 					{
 						"sprite": "assets/sprites/well_0.png"
 					}
-				]
+				],
+				"workers": 2
 			},
 			"road": {
 				"id": "road",
