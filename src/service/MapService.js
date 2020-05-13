@@ -88,7 +88,7 @@ const findClosestRoad = (entity) => {
 			return tmp
 		}
 
-		index = endX + (endY * map.sizeX)
+		index = endX + (y * map.sizeX)
 		if(index > 0 && index < mapData.length && mapData[index] === Enum.Cell.Road) {
 			tmp[0] = endX
 			tmp[1] = y

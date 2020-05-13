@@ -4,9 +4,10 @@ import MapService from "./service/MapService"
 import AIService from "./service/AIService"
 import TimeService from "./service/TimeService"
 import PopulationService from "./service/PopulationService"
+import BuildingService from "./service/BuildingService"
+import WalkerService from "./service/WalkerService"
 import Enum from "./Enum"
 import Game from "./Game"
-import BuildingService from "./service/BuildingService"
 
 const load = () => {
 	store.set("", {
@@ -24,6 +25,8 @@ const load = () => {
 		},
 		population: {
 			total: 0,
+			totalMax: 0,
+			workers: 0,
 			freeSpace: 0,
 			immigrants: 0
 		},
@@ -33,7 +36,10 @@ const load = () => {
 			year: 2100,
 			bce: true,
 			tUpdated: 0
-		}
+		},
+		entities: null,
+		houses: null,
+		services: null
 	})
 
 	MapService.load()

@@ -22,17 +22,17 @@ const update = (tDelta) => {
 	}
 }
 
-const updateFreeSpace = () => {
+const updateFreeSpace = (houses) => {
 	let freeSpace = 0
 
-	const entities = store.data.entities
-	for(let n = 0; n < entities.length; n++) {
-		const entity = entities[n]
-		if(entity.config && entity.config.type === "house") {
+	for(let n = 0; n < houses.length; n++) {
+		const entity = houses[n]
+		if(entity.entryX !== -1) {
 			freeSpace += entity.freeSpace()
 		}
 	}
 
+	store.set("population/totalMax", store.data.population.total + freeSpace)
 	store.set("population/freeSpace", freeSpace)
 }
 
@@ -87,6 +87,8 @@ const handleImmigratReached = (entity) => {
 		population.total += populationAdded
 		population.freeSpace -= populationAdded
 		population.immigrants -= Config.immigrantPopulation
+		population.workers = population.total * Config.workerPercentage | 0
+		population.totalMax = population.total + population.freeSpace
 		store.update("population")
 	}
 }

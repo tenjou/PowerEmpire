@@ -7,19 +7,38 @@ import Game from "../Game"
 import db from "../../assets/db.json"
 
 const serviceBuildings = []
+const houseBuildings = []
 
 Game.subscribe(Enum.Event.EntityAdd, (entity) => {
-	if(entity.config && entity.config.type === "service") {
-		serviceBuildings.push(entity)
+	if(entity.config) {
+		switch(entity.config.type) {
+			case "service":
+				serviceBuildings.push(entity)
+				break
+			case "house":
+				houseBuildings.push(entity)
+				break
+		}
 	}
 })
 
 Game.subscribe(Enum.Event.EntityRemove, (entity) => {
-	if(entity.config && entity.config.type === "service") {
-		const index = serviceBuildings.indexOf(entity)
-		if(index !== -1) {
-			serviceBuildings[index] = serviceBuildings[serviceBuildings.length - 1]
-			serviceBuildings.pop()
+	if(entity.config) {
+		let buffer = null
+		switch(entity.config.type) {
+			case "service":
+				buffer = serviceBuildings
+				break
+			case "house":
+				buffer = houseBuildings
+				break
+		}
+		if(buffer) {
+			const index = buffer.indexOf(entity)
+			if(index !== -1) {
+				buffer[index] = buffer[buffer.length - 1]
+				buffer.pop()
+			}
 		}
 	}
 })
@@ -65,8 +84,6 @@ const build = (entityId, startX, startY) => {
 
 	store.update("state/placement")
 	store.update("entities")
-
-	PopulationService.updateFreeSpace()
 }
 
 const clear = (targetX, targetY) => {
@@ -188,19 +205,37 @@ const getRoadSprite = (entity) => {
 	return `-${posX}px -${posY}px`
 }
 
-const updateEntry = (entity) => {
-	if(entity.entryX !== -1) {
-		return
-	} 
-	const coords = MapService.findClosestRoad(entity)
-	console.log(coords)
-}
-
 const update = (tDelta) => {
+	let changed = false
+
+	for(let n = 0; n < houseBuildings.length; n++) {
+		const entity = houseBuildings[n]
+		if(entity.entryX === -1) {
+			const coords = MapService.findClosestRoad(entity)
+			if(coords[0] === -1) { continue }
+
+			entity.entryX = coords[0]
+			entity.entryY = coords[1]
+			changed = true
+		}
+	}	
+	if(changed) {
+		PopulationService.updateFreeSpace(houseBuildings)
+	}
+
 	for(let n = 0; n < serviceBuildings.length; n++) {
 		const entity = serviceBuildings[n]
-		updateEntry(entity)
+		if(entity.entryX === -1) {
+			const coords = MapService.findClosestRoad(entity)
+			entity.entryX = coords[0]
+			entity.entryY = coords[1]
+			activateService(entity)
+		}
 	}
+}
+
+const activateService = (entity) => {
+
 }
 
 export default {

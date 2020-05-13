@@ -31,7 +31,8 @@ const HeaderResource = component({
 const HeaderItem = component({
 	state: {
 		icon: null,
-		value: 0
+		value: 0,
+		valueMax: 0
 	},
 
 	render() {
@@ -41,7 +42,12 @@ const HeaderItem = component({
 			elementClose("icon")
 
 			elementOpen("value")
-				text(this.$value)
+				if(this.bind.valueMax) {
+					text(`${this.$value}/${this.$valueMax}`)
+				}
+				else {
+					text(this.$value)
+				}
 			elementClose("value")
 		elementClose("item")
 	}
@@ -62,8 +68,15 @@ const Header = component({
 		elementOpen("header")
 			componentVoid(HeaderItem, {
 				$icon: "fas fa-user",
-				bind: "population/total"
+				bind: { 
+					value: "population/total",
+					valueMax: "population/totalMax"
+				}
 			})
+			componentVoid(HeaderItem, {
+				$icon: "fas fa-hammer",
+				bind: "population/workers"
+			})			
 			componentVoid(HeaderResource, { 
 				$icon: "assets/icon/gold.png", 
 				bind: "resources/gold"

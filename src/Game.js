@@ -16,6 +16,8 @@ const load = () => {
 	entitiesGrid.length = map.sizeX * map.sizeY
 
 	store.set("entities", entities)
+	store.set("houses", [])
+	store.set("services", [])
 }
 
 const update = (tDelta) => {

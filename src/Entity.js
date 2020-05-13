@@ -43,7 +43,7 @@ class Building extends Entity {
 	}
 }
 
-class House extends Entity {
+class House extends Building {
 	constructor(config = null, onDone = null) {
 		super(config, onDone)
 		this.population = 0
