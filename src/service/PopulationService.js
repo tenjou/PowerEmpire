@@ -22,9 +22,10 @@ const update = (tDelta) => {
 	}
 }
 
-const updateFreeSpace = (houses) => {
+const updateFreeSpace = () => {
 	let freeSpace = 0
 
+	const houses = store.data.entitiesHouses
 	for(let n = 0; n < houses.length; n++) {
 		const entity = houses[n]
 		if(entity.entryX !== -1) {
@@ -47,6 +48,20 @@ const getFreeHouse = () => {
 		}
 	}
 	return null	
+}
+
+const updateWorkersNeed = () => {
+	let workersNeed = 0
+
+	const services = store.data.entitiesServices
+	for(let n = 0; n < services.length; n++) {
+		const entity = services[n]
+		if(entity.entryX !== -1) {
+			workersNeed += entity.config.workers
+		}
+	}
+
+	store.set("population/workersNeed", workersNeed)
 }
 
 const spawnImmigrant = () => {
@@ -94,5 +109,5 @@ const handleImmigratReached = (entity) => {
 }
 
 export default {
-	update, updateFreeSpace
+	update, updateFreeSpace, updateWorkersNeed
 }

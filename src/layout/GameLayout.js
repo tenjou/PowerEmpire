@@ -75,7 +75,10 @@ const Header = component({
 			})
 			componentVoid(HeaderItem, {
 				$icon: "fas fa-hammer",
-				bind: "population/workers"
+				bind: { 
+					value: "population/workers",
+					valueMax: "population/workersNeed"
+				}
 			})			
 			componentVoid(HeaderResource, { 
 				$icon: "assets/icon/gold.png", 

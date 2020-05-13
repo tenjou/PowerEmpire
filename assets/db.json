@@ -51,9 +51,10 @@
 			},
 			"hunting_hut": {
 				"id": "hunting_hut",
-				"type": "building",
+				"type": "service",
 				"sizeX": 1,
 				"sizeY": 1,
+				"workers": 4,
 				"levels": [
 					{
 						"sprite": "assets/sprites/hunting_hut_0.png"

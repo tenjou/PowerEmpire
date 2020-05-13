@@ -27,6 +27,7 @@ const load = () => {
 			total: 0,
 			totalMax: 0,
 			workers: 0,
+			workersNeed: 0,
 			freeSpace: 0,
 			immigrants: 0
 		},

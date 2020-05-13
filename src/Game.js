@@ -7,6 +7,8 @@ import db from "../assets/db.json"
 
 const listeners = {}
 const entities = []
+const entitiesHouses = []
+const entitiesServices = []
 const entitiesRemove = []
 const entitiesGrid = []
 const entitySpeed = 60
@@ -15,21 +17,18 @@ const load = () => {
 	const map = store.data.map
 	entitiesGrid.length = map.sizeX * map.sizeY
 
+	entities.length = 0
+	entitiesHouses.length = 0
+	entitiesServices.length = 0
 	store.set("entities", entities)
-	store.set("houses", [])
-	store.set("services", [])
+	store.set("entitiesHouses", entitiesHouses)
+	store.set("entitiesServices", entitiesServices)
 }
 
 const update = (tDelta) => {
 	if(entitiesRemove.length > 0) {
 		for(let n = 0; n < entitiesRemove.length; n++) {
-			const entity = entitiesRemove[n]
-			const index = entities.indexOf(entity)
-			if(index === -1) {
-				continue
-			}
-			entities[index] = entities[entities.length - 1]
-			entities.pop()
+			removeEntityImmediate(entitiesRemove[n])
 		}
 		entitiesRemove.length = 0
 	}
@@ -111,13 +110,50 @@ const entityTarget = (entity, targetX, targetY) => {
 
 const addEntity = (entity) => {
 	entities.push(entity)
+	if(entity.config) {
+		switch(entity.config.type) {
+			case "house":
+				entitiesHouses.push(entity)
+				break
+			case "service":
+				entitiesServices.push(entity)
+				break
+		}
+	}
 	store.update("entities")
-	emit("entity-add", entity)
+}
+
+const removeEntityImmediate = (entity) => {
+	const index = entities.indexOf(entity)
+	if(index !== -1) {
+		entities[index] = entities[entities.length - 1]
+		entities.pop()
+	}
+
+	if(entity.config) {
+		let buffer = null
+
+		switch(entity.config.type) {
+			case "house":
+				buffer = entitiesHouses				
+				break
+			case "service":
+				buffer = entitiesServices
+				break
+		}
+
+		if(buffer) {
+			const index = buffer.indexOf(entity)
+			if(index !== -1) {
+				buffer[index] = buffer[buffer.length - 1]
+				buffer.pop()
+			}
+		}
+	}
 }
 
 const removeEntity = (entity) => {
 	entitiesRemove.push(entity)
-	emit("entity-remove", entity)
 }
 
 const removeEntityAt = (x, y) => {

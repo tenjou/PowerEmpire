@@ -6,43 +6,6 @@ import Enum from "../Enum"
 import Game from "../Game"
 import db from "../../assets/db.json"
 
-const serviceBuildings = []
-const houseBuildings = []
-
-Game.subscribe(Enum.Event.EntityAdd, (entity) => {
-	if(entity.config) {
-		switch(entity.config.type) {
-			case "service":
-				serviceBuildings.push(entity)
-				break
-			case "house":
-				houseBuildings.push(entity)
-				break
-		}
-	}
-})
-
-Game.subscribe(Enum.Event.EntityRemove, (entity) => {
-	if(entity.config) {
-		let buffer = null
-		switch(entity.config.type) {
-			case "service":
-				buffer = serviceBuildings
-				break
-			case "house":
-				buffer = houseBuildings
-				break
-		}
-		if(buffer) {
-			const index = buffer.indexOf(entity)
-			if(index !== -1) {
-				buffer[index] = buffer[buffer.length - 1]
-				buffer.pop()
-			}
-		}
-	}
-})
-
 const build = (entityId, startX, startY) => {
 	const map = store.data.map
 	if(startX < 0 || startY < 0 || startX >= map.sizeX || startY >= map.sizeY) {
@@ -208,8 +171,9 @@ const getRoadSprite = (entity) => {
 const update = (tDelta) => {
 	let changed = false
 
-	for(let n = 0; n < houseBuildings.length; n++) {
-		const entity = houseBuildings[n]
+	const houses = store.data.entitiesHouses
+	for(let n = 0; n < houses.length; n++) {
+		const entity = houses[n]
 		if(entity.entryX === -1) {
 			const coords = MapService.findClosestRoad(entity)
 			if(coords[0] === -1) { continue }
@@ -220,22 +184,24 @@ const update = (tDelta) => {
 		}
 	}	
 	if(changed) {
-		PopulationService.updateFreeSpace(houseBuildings)
+		PopulationService.updateFreeSpace()
 	}
 
-	for(let n = 0; n < serviceBuildings.length; n++) {
-		const entity = serviceBuildings[n]
+	const services = store.data.entitiesServices
+	for(let n = 0; n < services.length; n++) {
+		const entity = services[n]
 		if(entity.entryX === -1) {
 			const coords = MapService.findClosestRoad(entity)
+			if(coords[0] === -1) { continue }
+
 			entity.entryX = coords[0]
 			entity.entryY = coords[1]
-			activateService(entity)
+			changed = true
 		}
 	}
-}
-
-const activateService = (entity) => {
-
+	if(changed) {
+		PopulationService.updateWorkersNeed()
+	}	
 }
 
 export default {
