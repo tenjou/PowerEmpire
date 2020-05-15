@@ -7,6 +7,7 @@ import Game from "../Game"
 let immigrationAccumulator = 0
 let immigrationStartX = 0
 let immigrationStartY = 0
+let needUpdateWorkers = false
 
 const update = (tDelta) => {
 	const population = store.data.population
@@ -19,6 +20,11 @@ const update = (tDelta) => {
 	}
 	else {
 		immigrationAccumulator = 0
+	}
+
+	if(needUpdateWorkers) {
+		updateWorkers()
+		needUpdateWorkers = false
 	}
 }
 
@@ -50,6 +56,25 @@ const getFreeHouse = () => {
 	return null	
 }
 
+const updateWorkers = () => {
+	const workers = store.data.population.workers
+	const services = store.data.entitiesServices
+	const workersRatio = workers / store.data.population.workersNeed
+
+	let workersLeft = workers
+	for(let n = 0; n < services.length; n++) {
+		const service = services[n]
+		const workersAssigned = Math.min(Math.ceil(service.config.workers * workersRatio), service.config.workers)
+		service.workers = Math.min(workersAssigned, workersLeft)
+		workersLeft -= service.workers
+		if(workersLeft <= 0) {
+			break
+		}
+	}
+
+	store.set("population/workersUsed", workers - workersLeft)
+}
+
 const updateWorkersNeed = () => {
 	let workersNeed = 0
 
@@ -60,6 +85,8 @@ const updateWorkersNeed = () => {
 			workersNeed += entity.config.workers
 		}
 	}
+
+	needUpdateWorkers = true
 
 	store.set("population/workersNeed", workersNeed)
 }
@@ -105,6 +132,8 @@ const handleImmigratReached = (entity) => {
 		population.workers = population.total * Config.workerPercentage | 0
 		population.totalMax = population.total + population.freeSpace
 		store.update("population")
+
+		needUpdateWorkers = true
 	}
 }
 
