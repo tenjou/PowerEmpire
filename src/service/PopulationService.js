@@ -29,18 +29,19 @@ const update = (tDelta) => {
 }
 
 const updateFreeSpace = () => {
-	let freeSpace = 0
+	let totalFreeSpace = 0
 
 	const houses = store.data.entitiesHouses
 	for(let n = 0; n < houses.length; n++) {
-		const entity = houses[n]
-		if(entity.entryX !== -1) {
-			freeSpace += entity.freeSpace()
+		const house = houses[n]
+		if(house.entryX !== -1) {
+			const freeSpace = house.freeSpace()
+			totalFreeSpace += freeSpace
 		}
 	}
 
-	store.set("population/totalMax", store.data.population.total + freeSpace)
-	store.set("population/freeSpace", freeSpace)
+	store.set("population/totalMax", store.data.population.total + totalFreeSpace)
+	store.set("population/freeSpace", totalFreeSpace)
 }
 
 const getFreeHouse = () => {
@@ -118,6 +119,7 @@ const handleImmigratReached = (entity) => {
 	if(targetEntity) {
 		if(targetEntity.level === 0) {
 			targetEntity.level = 1
+			targetEntity.targetLevel = 1
 		}
 
 		const freeSpace = targetEntity.freeSpace()

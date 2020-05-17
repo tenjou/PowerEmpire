@@ -5,6 +5,7 @@ import { Building, House, ServiceBuilding } from "../Entity"
 import Enum from "../Enum"
 import Game from "../Game"
 import db from "../../assets/db.json"
+import Config from "../Config"
 
 const build = (entityId, startX, startY) => {
 	const map = store.data.map
@@ -174,12 +175,14 @@ const update = (tDelta) => {
 	const houses = store.data.entitiesHouses
 	for(let n = 0; n < houses.length; n++) {
 		const entity = houses[n]
-		if(entity.entryX === -1) {
-			const coords = MapService.findClosestRoad(entity)
-			if(coords[0] === -1) { continue }
-
+		const coords = MapService.findClosestRoad(entity)
+		if(entity.entryX !== coords[0]) {
 			entity.entryX = coords[0]
 			entity.entryY = coords[1]
+			changed = true
+		}
+		if(entity.level !== entity.targetLevel) {
+			entity.level += (entity.level > entity.targetLevel) ? -1 : 1
 			changed = true
 		}
 	}	
@@ -201,7 +204,37 @@ const update = (tDelta) => {
 	}
 	if(changed) {
 		PopulationService.updateWorkersNeed()
-	}	
+	}
+
+	for(let n = 0; n < services.length; n++) {
+		const entity = services[n]
+		if(entity.entryX === -1) { continue }
+
+		
+	}
+}
+
+const consumeHouseResources = (daysPassed) => {
+	const houses = store.data.entitiesHouses
+	for(let n = 0; n < houses.length; n++) {
+		consumeHouseResource(houses[n])
+	}
+}
+
+const consumeHouseResource = (house, daysPassed) => {
+	if(house.population <= 0 || house.entryX === -1) {
+		house.targetLevel = 0
+		return
+	}
+
+	house.resources.water -= daysPassed * house.population * Config.consumptionRate_water
+	if(house.resources.water <= 0) {
+		house.resources.water = 0
+		house.targetLevel = 1
+		return
+	}
+
+	house.targetLevel = 2
 }
 
 export default {
@@ -210,5 +243,6 @@ export default {
 	useSelectedBrush, selectBrush, isSpecialBrush,
 	updatePlacement,
 	getRoadSprite,
-	update
+	update,
+	consumeHouseResources, consumeHouseResource
 }

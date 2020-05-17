@@ -1,4 +1,5 @@
 import { store } from "wabi"
+import BuildingService from "./BuildingService"
 
 const tDay = 1000
 const months = [ "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" ]
@@ -29,6 +30,8 @@ const update = () => {
 			}
 		}
 		store.update("date")
+
+		BuildingService.consumeHouseResources(daysPassed)
 	}
 }
 

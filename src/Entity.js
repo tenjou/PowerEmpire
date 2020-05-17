@@ -35,6 +35,12 @@ class Immigrant extends Character {
 	}
 }
 
+class Walker extends  Character {
+	constructor(config = null, onDone = null) {
+		super(config, onDone)
+	}
+}
+
 class Building extends Entity {
 	constructor(config = null, onDone = null) {
 		super(config, onDone)
@@ -48,6 +54,10 @@ class House extends Building {
 		super(config, onDone)
 		this.population = 0
 		this.reservedSpace = 0
+		this.resources = {
+			water: 200
+		}
+		this.targetLevel = 0
 	}
 
 	freeSpace() {
@@ -60,6 +70,7 @@ class ServiceBuilding extends Building {
 		super(config, onDone)
 		this.workers = 0
 		this.walker = null
+		this.tWalkerReturn = 0
 	}
 
 	workersNeeded() {
@@ -68,5 +79,5 @@ class ServiceBuilding extends Building {
 }
 
 export {
-	Entity, Character, ServiceBuilding, Immigrant, Building, House
+	Entity, Character, Walker, ServiceBuilding, Immigrant, Building, House
 }
