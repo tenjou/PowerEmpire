@@ -61,6 +61,9 @@ class House extends Building {
 	}
 
 	freeSpace() {
+		if(this.entryX === -1) {
+			return 0
+		}
 		return this.config.levels[this.level].space - this.population
 	}
 }

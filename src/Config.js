@@ -5,5 +5,5 @@ export default {
 	immigrationRate: 5,
 	workerPercentage: 0.42,
 	walkerDelay: 2.0,
-	consumptionRate_water: 1
+	consumptionRate_water: 20
 }

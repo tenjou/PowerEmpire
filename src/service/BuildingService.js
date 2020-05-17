@@ -187,7 +187,7 @@ const update = (tDelta) => {
 		}
 	}	
 	if(changed) {
-		PopulationService.updateFreeSpace()
+		PopulationService.updatePopulation()
 	}
 
 	const services = store.data.entitiesServices
@@ -217,7 +217,7 @@ const update = (tDelta) => {
 const consumeHouseResources = (daysPassed) => {
 	const houses = store.data.entitiesHouses
 	for(let n = 0; n < houses.length; n++) {
-		consumeHouseResource(houses[n])
+		consumeHouseResource(houses[n], daysPassed)
 	}
 }
 
@@ -226,6 +226,8 @@ const consumeHouseResource = (house, daysPassed) => {
 		house.targetLevel = 0
 		return
 	}
+
+	console.log(house.resources.water)
 
 	house.resources.water -= daysPassed * house.population * Config.consumptionRate_water
 	if(house.resources.water <= 0) {
